@@ -55,8 +55,8 @@ class Pep723Checker:
             scripts_input: Single path or list of paths to Python scripts or directories
         """
         self._requirements_set: RequirementsSet = set()
-        self._process_scripts(scripts_input)
         self._uv_path: Path | None = None
+        self._process_scripts(scripts_input)
 
     @property
     def requirements_set(self) -> RequirementsSet:
@@ -165,16 +165,29 @@ class Pep723Checker:
     def resolve_uv(self) -> Path:
         """Resolve the uv path."""
         if not self._uv_path:
-            try:
-                import uv
+            import importlib.util
+            import sys
 
-                included_uv_path: str | None = uv.__file__
-            except (ImportError, Exception) as err:
-                if not (included_uv_path := which("uv")):
-                    raise RuntimeError("uv not found") from err
-            if not included_uv_path:
-                raise RuntimeError("uv not found")
-            self._uv_path = Path(included_uv_path)
+            # Check if uv package is available
+            if importlib.util.find_spec("uv") is not None:
+                # uv package installed - look for binary in venv
+                uv_bin = Path(sys.prefix) / "bin" / "uv"
+                if uv_bin.exists():
+                    self._uv_path = uv_bin
+                else:
+                    # Fallback to PATH if binary not in expected location
+                    uv_path_str = which("uv")
+                    if not uv_path_str:
+                        msg = "uv binary not found in venv or PATH"
+                        raise RuntimeError(msg)
+                    self._uv_path = Path(uv_path_str)
+            else:
+                # uv package not installed - look in PATH
+                uv_path_str = which("uv")
+                if not uv_path_str:
+                    msg = "uv not found - install with: pip install uv"
+                    raise RuntimeError(msg)
+                self._uv_path = Path(uv_path_str)
         return self._uv_path
 
     def _execute_uv_export(self, script_path: Path) -> str | None:
