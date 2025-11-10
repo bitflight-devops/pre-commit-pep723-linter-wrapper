@@ -1,0 +1,48 @@
+# Include modular workflows
+include:
+  - local: ".gitlab/workflows/defaults.gitlab-ci.yml"
+  - local: ".gitlab/workflows/python-static-analysis.gitlab-ci.yml"
+  - local: ".gitlab/workflows/pytest.gitlab-ci.yml"
+  - local: ".gitlab/workflows/release.gitlab-ci.yml"
+
+# Repository-specific stages (docker stage for clang-builder)
+stages:
+  - docker
+  - lint
+  - test
+  - release
+
+variables:
+  UV_CACHE_DIR: "${CI_PROJECT_DIR}/.cache/uv"
+  PIP_CACHE_DIR: "${CI_PROJECT_DIR}/.cache/pip"
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+  USB_BUILDER_IMAGE: "${CI_REGISTRY_IMAGE}/clang-builder"
+  CI_IMAGE: "${USB_BUILDER_IMAGE}:${CI_COMMIT_REF_SLUG}"
+  CI_IMAGE_LATEST: "${USB_BUILDER_IMAGE}:latest"
+
+# Specialized Docker build job (preserved from original CI)
+docker:build:
+  stage: docker
+  image: docker
+  tags:
+    - dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - export UID=${UID:-1000}
+    - export GID=${GID:-1000}
+    - export USER=${USER:-builder}
+  script:
+    - docker pull ${CI_IMAGE_LATEST} || true
+    - DOCKER_BUILDKIT=1 docker compose build --build-arg BUILDKIT_INLINE_CACHE=1 clang-builder
+    - docker tag ${CI_IMAGE_LATEST} ${CI_IMAGE}
+    - docker push ${CI_IMAGE}
+    - docker push ${CI_IMAGE_LATEST}
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      changes:
+        - Dockerfile
+        - pyproject.toml
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+      when: manual
+      allow_failure: false
