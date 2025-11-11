@@ -187,11 +187,11 @@ venv = ".venv"
 
 [tool.pytest.ini_options]
 addopts = [
-	"--cov=packages/usb_powertools",
+	"--cov=packages/pep723_loader",
 	"--cov-report=term-missing",
 	"-v",
 ]
-testpaths = ["packages/usb_powertools/tests"]
+testpaths = ["packages/pep723_loader/tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
