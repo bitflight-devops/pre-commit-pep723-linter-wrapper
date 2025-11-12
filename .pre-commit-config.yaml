@@ -77,13 +77,13 @@ repos:
         pass_filenames: true
       - id: mypy
         name: mypy
-        entry: uv run --active mypy
+        entry: uv run --no-sync --active mypy
         language: system
         types: [python]
         pass_filenames: true
       - id: basedpyright
         name: basedpyright
-        entry: uv run --active basedpyright
+        entry: uv run --no-sync --active basedpyright
         language: system
         types: [python]
         pass_filenames: true
