@@ -29,7 +29,7 @@ repos:
 
   # Python formatting and linting
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.13.3
+    rev: v0.14.4
     hooks:
       - id: ruff
         name: Lint Python with ruff
@@ -69,21 +69,15 @@ repos:
 
   - repo: local
     hooks:
-      - id: install-pep723-deps
-        name: Install PEP 723 script dependencies
-        entry: bash -c 'for file in "$@"; do if head -20 "$file" | grep -q "# /// script"; then uv export --script "$file" | uv pip install --quiet -r -; fi; done' --
-        language: system
-        types: [python]
-        pass_filenames: true
       - id: mypy
         name: mypy
-        entry: uv run --no-sync --active mypy
+        entry: uv run -q --no-sync --with pep723-loader --with mypy pep723-loader mypy
         language: system
         types: [python]
         pass_filenames: true
       - id: basedpyright
         name: basedpyright
-        entry: uv run --no-sync --active basedpyright
+        entry: uv run -q --no-sync --with pep723-loader --with basedpyright pep723-loader basedpyright
         language: system
         types: [python]
         pass_filenames: true

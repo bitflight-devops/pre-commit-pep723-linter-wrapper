@@ -167,6 +167,7 @@ max-complexity = 10
 [tool.mypy]
 python_version = "3.10"
 strict = true
+strict_equality = true
 extra_checks = true
 warn_unused_configs = true
 warn_redundant_casts = true
@@ -174,14 +175,22 @@ warn_unused_ignores = true
 ignore_missing_imports = true
 show_error_codes = true
 pretty = true
-disable_error_code = "call-arg"
-mypy_path = []
+disable_error_code = ["call-arg"]
+
+[[tool.mypy.overrides]]
+module = ["pep723_loader.tests.unit.fixtures.*", "pep723_loader.tests.e2e.*"]
+disable_error_code = ["import-untyped"]
 
 [tool.basedpyright]
-include = ["packages"]
-extraPaths = [".github"]
 pythonVersion = "3.10"
-typeCheckingMode = "basic"
+typeCheckingMode = "standard"
+reportMissingImports = false
+reportMissingTypeStubs = false
+reportUnnecessaryTypeIgnoreComment = "error"
+reportPrivateImportUsage = false
+include = ["packages"]
+extraPaths = ["packages", ".github", "tests", "."]
+exclude = ["**/node_modules", "**/__pycache__", ".*", "__*"]
 venvPath = "."
 venv = ".venv"
 

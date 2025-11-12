@@ -27,7 +27,7 @@ from __future__ import annotations
 import subprocess
 from collections.abc import Generator
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import pytest
 from pep723_loader.cli import app
@@ -133,12 +133,12 @@ def mock_uv_export_success(mocker: MockerFixture) -> MockerFixture:
             mock_export = mocker.Mock(spec=subprocess.CompletedProcess)
             mock_export.returncode = 0
             mock_export.stdout = "requests>=2.31.0\npydantic>=2.0.0\n"
-            return mock_export  # type: ignore[no-any-return]
+            return cast(subprocess.CompletedProcess[str], mock_export)
 
         # For uv pip install and wrapped commands
         mock_other = mocker.Mock(spec=subprocess.CompletedProcess)
         mock_other.returncode = 0
-        return mock_other  # type: ignore[no-any-return]
+        return cast(subprocess.CompletedProcess[str], mock_other)
 
     mocker.patch("subprocess.run", side_effect=mock_run_side_effect)
     return mocker
@@ -451,18 +451,18 @@ class TestErrorHandling:
                     mock_export = mocker.Mock(spec=subprocess.CompletedProcess)
                     mock_export.returncode = 0
                     mock_export.stdout = "requests>=2.31.0\n"
-                    return mock_export  # type: ignore[no-any-return]
+                    return cast(subprocess.CompletedProcess[str], mock_export)
                 # uv pip install fails
                 if len(cmd) >= 2 and cmd[1] == "pip":
                     mock_install = mocker.Mock(spec=subprocess.CompletedProcess)
                     mock_install.returncode = 1
                     mock_install.stderr = "ERROR: Package not found"
-                    return mock_install  # type: ignore[no-any-return]
+                    return cast(subprocess.CompletedProcess[str], mock_install)
 
             # Default success
             mock_default = mocker.Mock(spec=subprocess.CompletedProcess)
             mock_default.returncode = 0
-            return mock_default  # type: ignore[no-any-return]
+            return cast(subprocess.CompletedProcess[str], mock_default)
 
         mocker.patch("subprocess.run", side_effect=mock_run_with_install_failure)
 
@@ -499,14 +499,14 @@ class TestErrorHandling:
                 mock_cmd.returncode = 2
                 mock_cmd.stdout = ""
                 mock_cmd.stderr = "Type checking failed"
-                return mock_cmd  # type: ignore[no-any-return]
+                return cast(subprocess.CompletedProcess[str], mock_cmd)
 
             # Default success for uv commands
             mock_default = mocker.Mock(spec=subprocess.CompletedProcess)
             mock_default.returncode = 0
             mock_default.stdout = ""
             mock_default.stderr = ""
-            return mock_default  # type: ignore[no-any-return]
+            return cast(subprocess.CompletedProcess[str], mock_default)
 
         mocker.patch("subprocess.run", side_effect=mock_run_with_command_failure)
 
