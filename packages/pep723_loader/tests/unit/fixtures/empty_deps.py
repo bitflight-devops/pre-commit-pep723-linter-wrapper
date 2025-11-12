@@ -7,6 +7,7 @@
 
 import json
 from pathlib import Path
+from typing import cast
 
 
 def read_config(config_path: Path) -> dict[str, str]:
@@ -18,7 +19,7 @@ def read_config(config_path: Path) -> dict[str, str]:
     Returns:
         Configuration dictionary
     """
-    return json.loads(config_path.read_text())
+    return cast(dict[str, str], json.loads(config_path.read_text()))
 
 
 def main() -> None:

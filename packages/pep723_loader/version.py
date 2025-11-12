@@ -2,6 +2,7 @@
 
 Based on <https://github.com/maresb/hatch-vcs-footgun-example>.
 """
+
 # /// script
 # List dependencies for linting only
 # dependencies = [
@@ -19,9 +20,9 @@ def _get_hatch_version() -> str | None:
     For more details, see <https://github.com/maresb/hatch-vcs-footgun-example/>.
     """
     try:
-        from hatchling.metadata.core import ProjectMetadata  # pyright: ignore[reportMissingImports]
-        from hatchling.plugin.manager import PluginManager  # pyright: ignore[reportMissingImports]
-        from hatchling.utils.fs import locate_file  # pyright: ignore[reportMissingImports]
+        from hatchling.metadata.core import ProjectMetadata
+        from hatchling.plugin.manager import PluginManager
+        from hatchling.utils.fs import locate_file
     except ImportError:
         # Hatchling is not installed, so probably we are not in
         # a development environment.
@@ -29,7 +30,8 @@ def _get_hatch_version() -> str | None:
 
     pyproject_toml = locate_file(__file__, "pyproject.toml")
     if pyproject_toml is None:
-        raise RuntimeError("pyproject.toml not found although hatchling is installed")
+        # Not in a development environment with pyproject.toml, fall back to importlib.metadata
+        return None
     root = os.path.dirname(pyproject_toml)
     metadata = ProjectMetadata(root=root, plugin_manager=PluginManager())
     # Version can be either statically set in pyproject.toml or computed dynamically:
