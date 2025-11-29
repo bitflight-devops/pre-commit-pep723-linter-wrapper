@@ -1,6 +1,8 @@
 {
   "MD003": false,
-  "MD007": { "indent": 2 },
+  "MD007": {
+    "indent": 2
+  },
   "MD001": false,
   "MD022": false,
   "MD024": false,
@@ -34,5 +36,6 @@
   "no-trailing-spaces": false,
   "ol-prefix": false,
   "strong-style": false,
-  "ul-indent": false
+  "ul-indent": false,
+  "MD040": false
 }
