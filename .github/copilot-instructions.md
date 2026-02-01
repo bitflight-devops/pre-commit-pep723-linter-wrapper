@@ -32,7 +32,7 @@ uv run ruff check --fix .          # Auto-fix issues (~2-3s)
 uv run ruff format .                # Format code (~1-2s)
 uv run mypy packages/               # Type check (~5-8s)
 uv run basedpyright packages/       # Alternative type checker (~10-15s)
-uv run pre-commit run --all-files   # All hooks (~30-60s first, ~10-20s after)
+uv run prek run --all-files         # All hooks (~30-60s first, ~10-20s after) - uses prek for faster execution
 ```
 
 ### Building
@@ -64,6 +64,7 @@ packages/pep723_loader/
 **Key Flow**: CLI → extract Python files from args → `Pep723Checker` runs `uv export --script` → install via `uv pip install` → execute wrapped command → propagate exit code.
 
 **Config Files**:
+
 - `pyproject.toml`: Tool configs (ruff: 120 char lines, Google docstrings; mypy: strict; pytest: ≥70% cov)
 - `.pre-commit-config.yaml`: Hooks use `uv run --no-sync` with pep723-loader (dogfooding)
 - `.gitignore`: Excludes `.venv/`, `dist/`, `__pycache__/`, cache dirs
@@ -79,7 +80,7 @@ packages/pep723_loader/
 1. **`uv: command not found`**: Install with `pip install uv` or `curl -LsSf https://astral.sh/uv/install.sh | sh`
 2. **Shallow clone warnings**: Harmless - from setuptools-scm in CI environments
 3. **Import errors**: Run `uv sync` first
-4. **Pre-commit fails**: Ensure `uv sync` ran; hooks use `--no-sync` for speed
+4. **Pre-commit/prek fails**: Ensure `uv sync` ran; hooks use `--no-sync` for speed
 5. **Coverage <70%**: Add tests; use `pytest --cov-report=html` for details
 6. **Type errors in git.py**: Ignore - it's gitpython, not our code
 
@@ -95,6 +96,7 @@ packages/pep723_loader/
 ## When to Search Beyond This
 
 These instructions are validated. Only search if:
+
 - Command fails unexpectedly
 - Adding new dependency/tool
 - Instructions incomplete for your scenario

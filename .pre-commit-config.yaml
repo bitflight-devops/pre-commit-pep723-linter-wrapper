@@ -29,7 +29,7 @@ repos:
 
   # Python formatting and linting
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.4
+    rev: v0.14.14
     hooks:
       - id: ruff
         name: Lint Python with ruff
@@ -37,10 +37,9 @@ repos:
       - id: ruff-format
         name: Format Python with ruff
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.18.1
+    rev: v0.20.0
     hooks:
       - id: markdownlint-cli2
-        language_version: "latest"
         args: ["--fix"]
   # YAML/JSON formatting
   - repo: https://github.com/pre-commit/mirrors-prettier

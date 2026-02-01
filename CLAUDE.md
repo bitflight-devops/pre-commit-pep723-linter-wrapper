@@ -26,8 +26,8 @@ uv run ruff format .
 uv run mypy packages/
 uv run basedpyright packages/
 
-# Run pre-commit hooks
-uv run pre-commit run --all-files
+# Run pre-commit hooks (using prek for faster execution)
+uv run prek run --all-files
 
 # Build package
 uv build
