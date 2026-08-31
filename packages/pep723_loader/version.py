@@ -4,7 +4,7 @@ Based on <https://github.com/maresb/hatch-vcs-footgun-example>.
 """
 
 # /// script
-# List dependencies for linting only
+# # List dependencies for linting only
 # dependencies = [
 #   "hatchling>=1.14.0",
 # ]

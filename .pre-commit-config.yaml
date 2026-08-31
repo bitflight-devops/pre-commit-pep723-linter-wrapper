@@ -2,7 +2,7 @@
 
 repos:
   - repo: https://github.com/mxr/sync-pre-commit-deps
-    rev: v0.0.3
+    rev: v0.0.5
     hooks:
       - id: sync-pre-commit-deps
 
@@ -37,7 +37,7 @@ repos:
       - id: ruff-format
         name: Format Python with ruff
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.20.0
+    rev: v0.23.2
     hooks:
       - id: markdownlint-cli2
         args: ["--fix"]
@@ -62,29 +62,28 @@ repos:
           - "4"
           - -ci
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.11.0.1
+    rev: v0.11.0.1-1
     hooks:
       - id: shellcheck
 
   - repo: local
     hooks:
-      - id: mypy
-        name: mypy
-        entry: uv run -q --no-sync --with pep723-loader --with mypy pep723-loader mypy
+      - id: ty
+        name: ty check
+        # pass_filenames is off on purpose: ty treats any file carrying PEP 723
+        # inline metadata as an isolated single-file script, and passing file
+        # names bypasses [tool.ty.src] entirely -- which would drag the
+        # deliberately-invalid fixture back in. Run the project-configured
+        # check so its exclude applies. (Verified against ty 0.0.75.)
+        entry: uv run -q ty check
         language: system
         types: [python]
-        pass_filenames: true
-      - id: basedpyright
-        name: basedpyright
-        entry: uv run -q --no-sync --with pep723-loader --with basedpyright pep723-loader basedpyright
-        language: system
-        types: [python]
-        pass_filenames: true
-        require_serial: true
+        pass_filenames: false
 
 # Configuration for specific hooks
 default_language_version:
   python: python3
+  node: 24.16.0
 
 # Exclude patterns
 exclude: |
