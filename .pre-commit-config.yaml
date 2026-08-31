@@ -2,7 +2,7 @@
 
 repos:
   - repo: https://github.com/mxr/sync-pre-commit-deps
-    rev: v0.0.3
+    rev: v0.0.5
     hooks:
       - id: sync-pre-commit-deps
 
@@ -37,7 +37,7 @@ repos:
       - id: ruff-format
         name: Format Python with ruff
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.20.0
+    rev: v0.23.2
     hooks:
       - id: markdownlint-cli2
         args: ["--fix"]
@@ -62,7 +62,7 @@ repos:
           - "4"
           - -ci
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.11.0.1
+    rev: v0.11.0.1-1
     hooks:
       - id: shellcheck
 
