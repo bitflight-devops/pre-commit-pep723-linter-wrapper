@@ -53,7 +53,6 @@ packages = ["packages/pep723_loader"]
 
 [dependency-groups]
 dev = [
-    "basedpyright>=1.37.3",
     "generate-changelog>=0.16.0",
     "hatch-vcs>=0.5.0",
     "hatchling>=1.28.0",
@@ -182,18 +181,12 @@ disable_error_code = ["call-arg"]
 module = ["pep723_loader.tests.unit.fixtures.*", "pep723_loader.tests.e2e.*"]
 disable_error_code = ["import-untyped"]
 
+# Type checking: mypy only (`[tool.mypy]`, `uv run mypy packages/`, CI + pre-commit).
+# basedpyright is disabled here so IDEs and one-off CLI runs do not second-guess mypy.
+# `pep723-loader basedpyright <script>` still works for consumers -- the wrapper runs
+# whatever linter the caller has installed; it is not a dependency of this repo.
 [tool.basedpyright]
-pythonVersion = "3.10"
-typeCheckingMode = "standard"
-reportMissingImports = false
-reportMissingTypeStubs = false
-reportUnnecessaryTypeIgnoreComment = "error"
-reportPrivateImportUsage = false
-include = ["packages"]
-extraPaths = ["packages", ".github", "tests", "."]
-exclude = ["**/node_modules", "**/__pycache__", ".*", "__*"]
-venvPath = "."
-venv = ".venv"
+typeCheckingMode = "off"
 
 [tool.pytest.ini_options]
 addopts = [

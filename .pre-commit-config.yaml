@@ -74,13 +74,6 @@ repos:
         language: system
         types: [python]
         pass_filenames: true
-      - id: basedpyright
-        name: basedpyright
-        entry: uv run -q --no-sync --with pep723-loader --with basedpyright pep723-loader basedpyright
-        language: system
-        types: [python]
-        pass_filenames: true
-        require_serial: true
 
 # Configuration for specific hooks
 default_language_version:

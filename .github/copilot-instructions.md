@@ -31,7 +31,6 @@ Expected: 39 tests pass, ~91% coverage.
 uv run ruff check --fix .          # Auto-fix issues (~2-3s)
 uv run ruff format .                # Format code (~1-2s)
 uv run mypy packages/               # Type check (~5-8s)
-uv run basedpyright packages/       # Alternative type checker (~10-15s)
 uv run prek run --all-files         # All hooks (~30-60s first, ~10-20s after) - uses prek for faster execution
 ```
 
@@ -45,7 +44,7 @@ uv build  # Creates wheel + sdist in dist/ (~5-10s)
 
 ```bash
 uv sync && uv run ruff check --fix . && uv run ruff format . && \
-uv run mypy packages/ && uv run basedpyright packages/ && uv run pytest
+uv run mypy packages/ && uv run pytest
 ```
 
 ## Project Layout & Architecture
