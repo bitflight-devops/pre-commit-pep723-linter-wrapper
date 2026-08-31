@@ -23,7 +23,7 @@ uv run ruff check --fix .
 uv run ruff format .
 
 # Type checking
-uv run mypy packages/
+uv run ty check
 
 # Run pre-commit hooks (using prek for faster execution)
 uv run prek run --all-files
@@ -86,4 +86,4 @@ The tool integrates with pre-commit via local hooks in `.pre-commit-config.yaml`
 - Google-style docstrings (enforced by ruff)
 - Tests follow AAA pattern with pytest-mock
 - Line length: 120 characters
-- Ruff for linting/formatting, mypy for type checking
+- Ruff for linting/formatting, ty for type checking

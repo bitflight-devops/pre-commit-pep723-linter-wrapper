@@ -68,12 +68,17 @@ repos:
 
   - repo: local
     hooks:
-      - id: mypy
-        name: mypy
-        entry: uv run -q --no-sync --with pep723-loader --with mypy pep723-loader mypy
+      - id: ty
+        name: ty check
+        # pass_filenames is off on purpose: ty treats any file carrying PEP 723
+        # inline metadata as an isolated single-file script, and passing file
+        # names bypasses [tool.ty.src] entirely -- which would drag the
+        # deliberately-invalid fixture back in. Run the project-configured
+        # check so its exclude applies. (Verified against ty 0.0.75.)
+        entry: uv run -q ty check
         language: system
         types: [python]
-        pass_filenames: true
+        pass_filenames: false
 
 # Configuration for specific hooks
 default_language_version:

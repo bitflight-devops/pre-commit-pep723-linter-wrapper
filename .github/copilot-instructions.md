@@ -30,7 +30,7 @@ Expected: 39 tests pass, ~91% coverage.
 ```bash
 uv run ruff check --fix .          # Auto-fix issues (~2-3s)
 uv run ruff format .                # Format code (~1-2s)
-uv run mypy packages/               # Type check (~5-8s)
+uv run ty check                     # Type check (~1-2s)
 uv run prek run --all-files         # All hooks (~30-60s first, ~10-20s after) - uses prek for faster execution
 ```
 
@@ -44,7 +44,7 @@ uv build  # Creates wheel + sdist in dist/ (~5-10s)
 
 ```bash
 uv sync && uv run ruff check --fix . && uv run ruff format . && \
-uv run mypy packages/ && uv run pytest
+uv run ty check && uv run pytest
 ```
 
 ## Project Layout & Architecture
@@ -64,7 +64,7 @@ packages/pep723_loader/
 
 **Config Files**:
 
-- `pyproject.toml`: Tool configs (ruff: 120 char lines, Google docstrings; mypy: strict; pytest: ≥70% cov)
+- `pyproject.toml`: Tool configs (ruff: 120 char lines, Google docstrings; ty: packages/; pytest: ≥70% cov)
 - `.pre-commit-config.yaml`: Hooks use `uv run --no-sync` with pep723-loader (dogfooding)
 - `.gitignore`: Excludes `.venv/`, `dist/`, `__pycache__/`, cache dirs
 
@@ -86,7 +86,7 @@ packages/pep723_loader/
 ## Code Conventions
 
 - Python 3.10+ (use `|` for unions, not `Union`)
-- Full type hints (mypy strict mode)
+- Full type hints
 - Google-style docstrings, 120 char lines
 - Path objects over strings
 - f-strings over `.format()` or `%`

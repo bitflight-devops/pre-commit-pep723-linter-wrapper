@@ -56,7 +56,6 @@ dev = [
     "generate-changelog>=0.16.0",
     "hatch-vcs>=0.5.0",
     "hatchling>=1.28.0",
-    "mypy>=1.19.1",
     "pre-commit>=4.5.1",
     "prek>=0.3.1",
     "pytest>=9.0.2",
@@ -65,6 +64,7 @@ dev = [
     "pytest-mock>=3.15.1",
     "python-semantic-release>=10.5.3",
     "ruff>=0.14.14",
+    "ty>=0.0.75",
     "uv>=0.9.13",
 ]
 
@@ -165,28 +165,27 @@ max-complexity = 10
 "**/test_*.py" = ["S101", "S603", "S607", "D102", "D200", "D100"]
 
 [tool.mypy]
-python_version = "3.10"
-strict = true
-strict_equality = true
-extra_checks = true
-warn_unused_configs = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-ignore_missing_imports = true
-show_error_codes = true
-pretty = true
-disable_error_code = ["call-arg"]
+exclude = [".*"]
 
-[[tool.mypy.overrides]]
-module = ["pep723_loader.tests.unit.fixtures.*", "pep723_loader.tests.e2e.*"]
-disable_error_code = ["import-untyped"]
-
-# Type checking: mypy only (`[tool.mypy]`, `uv run mypy packages/`, CI + pre-commit).
-# basedpyright is disabled here so IDEs and one-off CLI runs do not second-guess mypy.
-# `pep723-loader basedpyright <script>` still works for consumers -- the wrapper runs
-# whatever linter the caller has installed; it is not a dependency of this repo.
+# Type checking: Astral ty only (`[tool.ty.src]`, `uv run ty check`, CI + pre-commit).
+# mypy and basedpyright overlap ty; they are disabled here so IDEs and one-off CLI
+# runs do not second-guess ty. `pep723-loader mypy <script>` and
+# `pep723-loader basedpyright <script>` still work for consumers -- the wrapper runs
+# whatever linter the caller has installed; neither is a dependency of this repo.
 [tool.basedpyright]
 typeCheckingMode = "off"
+
+[tool.ty.src]
+exclude = [
+    # Test input, not source. These fixtures exist to carry PEP 723 inline
+    # metadata for the CLI to parse: one is deliberately invalid TOML, and the
+    # others declare dependencies that are deliberately NOT installed -- that
+    # is the whole scenario this wrapper exists to handle. ty reads inline
+    # metadata and would report both as errors. They must never be
+    # type-checked or repaired.
+    "packages/pep723_loader/tests/unit/fixtures/",
+]
+include = ["packages"]
 
 [tool.pytest.ini_options]
 addopts = [
